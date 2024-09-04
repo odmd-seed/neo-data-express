@@ -18,4 +18,6 @@ MATCH     (root)
      return  node2, node3, node4, node5, node6, l3,l4,l5,l6, lc3,lc4, r3,r4
 ```
 
-The Neo4j  database contains information all resources of all stacks, 
+The Neo4j  database contains information all resources of all stacks, we can see everything thru native tool, the following snapshot only shows the 1st 300 nodes out of 1000, from the labels on the right, we can clearly see how these resources are organized by AWS CDK TS classes and actual deployements:
+
+![img.png](img.png)
