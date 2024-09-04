@@ -21,3 +21,12 @@ MATCH     (root)
 The Neo4j  database contains information all resources of all stacks, we can see everything thru native tool, the following snapshot only shows the 1st 300 nodes out of 1000, from the labels on the right, we can clearly see how these resources are organized by AWS CDK TS classes and actual deployements:
 
 ![img.png](img.png)
+
+
+Can query any part/dimension for example how stacks depends on each other: 
+![img_1.png](img_1.png)
+
+Drill down to internal dependency chain:
+![img_2.png](img_2.png)
+
+So that we can see relationships inside and out across all resources in the whole system.
