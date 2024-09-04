@@ -18,3 +18,10 @@ services:
       - ./neo4jdata:/data
     environment:
       - NEO4J_AUTH=none
+
+
+
+
+
+
+
