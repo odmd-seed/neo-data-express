@@ -26,11 +26,11 @@ aws s3 cp "s3://$BUCKET_NAME/$FILE_KEY" "$DOWNLOAD_PATH/$FILE_KEY" --profile san
 echo "Extracting $FILE_KEY to $EXTRACT_PATH..."
 tar -xvf "$DOWNLOAD_PATH/$FILE_KEY" -C "$EXTRACT_PATH"
 
-
-docker run -d \
-    --name $Neo_container_name \
-    -v "$(pwd)/$EXTRACT_PATH":/data \
-    -p 7574:7474 \
-    -p 7587:7687 \
-    -e NEO4J_AUTH=none \
-    neo4j:5.22
+#
+#docker run -d \
+#    --name $Neo_container_name \
+#    -v "$(pwd)/$EXTRACT_PATH":/data \
+#    -p 7574:7474 \
+#    -p 7587:7687 \
+#    -e NEO4J_AUTH=none \
+#    neo4j:5.22

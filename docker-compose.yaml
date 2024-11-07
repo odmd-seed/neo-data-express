@@ -9,19 +9,24 @@ services:
     depends_on:
       - neo4j
 
+  #  neo4j:
+  #    image: neo4j:latest
+  #    ports:
+  #      - "7474:7474"
+  #      - "7687:7687"
+  #    volumes:
+  #      - ./neo4jdata:/data
+  #    environment:
+  #      - NEO4J_AUTH=none
+
+
+
   neo4j:
-    image: neo4j:latest
+    image: neo4j:5.22
     ports:
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - ./neo4jdata:/data
+      - ./zip-central-neo4j/extracted:/data
     environment:
       - NEO4J_AUTH=none
-
-
-
-
-
-
-

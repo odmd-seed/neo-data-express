@@ -43,6 +43,30 @@ app.get(`/bbb`, async (req: Request, resp: Response) => {
 
 })
 
+app.get(`/ooo`, async (req: Request, resp: Response) => {
+    const buildIds = req.originalUrl.substring(5).split(',')
+
+    let tmp = buildIds.map(bid => `n.OdmdBuildId='${bid}'`).join(' or ');
+//    console.log(`bbbb --->>> tmp ---->>>>${tmp}`)
+    const cypher = `
+    MATCH     (root)
+     -[l1]->(lc1:LifeCycle)-[r1:lifecycle]->(node1)
+     -[l2]->(lc2:LifeCycle)-[r2:lifecycle]->(node2)
+     -[l3]->(lc3:LifeCycle)-[r3:lifecycle]->(node3)
+     -[l4]->(lc4:LifeCycle)-[r4:lifecycle]->(node4)
+     -[l5]->(node5:EnverPipeline)
+     -[l6]->(node6:RunningEnverStacksProducers)
+     WHERE  "Ondemand__root" in root.classesNames and ( ${buildIds.map(bid => `node2.OdmdBuildId='${bid}'`).join(' or ')} )
+     return  node2, node3, node4, node5, node6, l3,l4,l5,l6, lc3,lc4, r3,r4
+     
+
+    
+    `;
+//    console.log(`bbbb --->>> cypher ---->>>>${cypher}`)
+    resp.send(await neo4j.exeCypher(cypher))
+
+})
+
 
 // Create HTTP server
 const httpServer = http.createServer(app);
