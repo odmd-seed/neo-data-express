@@ -6,7 +6,8 @@ set -ex
 # Variables (Replace these with your own values)
 BUCKET_NAME="odmd-central-artifact-centralartuswest159018403179-jmsozai1plyf"
 
-FILE_KEY="neo4j-dump/590184031795-ed9a5b81d2d93433f583b6aa62dfb04f646aaf0f.tar.gz"
+#FILE_KEY="neo4j-dump/590184031795-5bc391018c41f2897e89c532e14cdd7aa8fb9777.tar.gz"
+FILE_KEY="neo4j-dump/590184031795-38145cd6cdef04f2259b41f7bae51978fa32d5c8.tar.gz"
 DOWNLOAD_PATH="downloaded"  # Local path where the tar will be downloaded
 EXTRACT_PATH="extracted"    # Folder to extract the tar contents
 Neo_container_name="neo4jCentralRestored"

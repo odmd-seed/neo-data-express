@@ -16,7 +16,7 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(cors.default(/*corsOptions*/));
 
-const neo4j: Neo4jQuery = new Neo4jQuery()
+const neo4jSbx: Neo4jQuery = new Neo4jQuery('neo4j-sbx')
 
 
 app.get(`/bbb`, async (req: Request, resp: Response) => {
@@ -39,31 +39,23 @@ app.get(`/bbb`, async (req: Request, resp: Response) => {
     
     `;
 //    console.log(`bbbb --->>> cypher ---->>>>${cypher}`)
-    resp.send(await neo4j.exeCypher(cypher))
+    resp.send(await neo4jSbx.exeCypher(cypher))
 
 })
 
-app.get(`/ooo`, async (req: Request, resp: Response) => {
-    const buildIds = req.originalUrl.substring(5).split(',')
-
-    let tmp = buildIds.map(bid => `n.OdmdBuildId='${bid}'`).join(' or ');
-//    console.log(`bbbb --->>> tmp ---->>>>${tmp}`)
+const enverStack = `/enver-stack`;
+app.get(enverStack, async (req: Request, resp: Response) => {
+    const buildIds = req.originalUrl.substring(enverStack.length + 1).split(',')
     const cypher = `
-    MATCH     (root)
-     -[l1]->(lc1:LifeCycle)-[r1:lifecycle]->(node1)
-     -[l2]->(lc2:LifeCycle)-[r2:lifecycle]->(node2)
-     -[l3]->(lc3:LifeCycle)-[r3:lifecycle]->(node3)
-     -[l4]->(lc4:LifeCycle)-[r4:lifecycle]->(node4)
-     -[l5]->(node5:EnverPipeline)
-     -[l6]->(node6:RunningEnverStacksProducers)
-     WHERE  "Ondemand__root" in root.classesNames and ( ${buildIds.map(bid => `node2.OdmdBuildId='${bid}'`).join(' or ')} )
-     return  node2, node3, node4, node5, node6, l3,l4,l5,l6, lc3,lc4, r3,r4
-     
-
-    
-    `;
-//    console.log(`bbbb --->>> cypher ---->>>>${cypher}`)
-    resp.send(await neo4j.exeCypher(cypher))
+            MATCH (jobs)-[building]->(stacks)-[producing]->(productions)
+            WHERE 'RepoEnverPpBase' IN jobs.classesNames 
+              AND 'RunningEnverStacks' IN stacks.classesNames 
+              AND 'RunningEnverStacksProducers' IN productions.classesNames
+              AND ( ${buildIds.map(bid => `jobs.OdmdBuildId='${bid}'`).join(' or ')} )
+            OPTIONAL MATCH (stacks)-[consuming]->(producers)
+            RETURN jobs, building, stacks, producing, productions, consuming;
+`
+    resp.send(await neo4jSbx.exeCypher(cypher))
 
 })
 

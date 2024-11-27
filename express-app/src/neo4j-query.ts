@@ -5,7 +5,7 @@ export class Neo4jQuery {
 
     private driver: neo4j.Driver;
 
-    constructor() {
+    constructor(service:string) {
         const config: Config = {
             logging: {
                 level: 'debug', logger: (level, message) => {
@@ -30,7 +30,7 @@ export class Neo4jQuery {
         };
 
         this.driver = neo4j.driver(
-            'bolt://neo4j:7687',
+            `bolt://${service}:7687`,
             undefined,
             config
         );
