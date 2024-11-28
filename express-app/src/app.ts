@@ -17,6 +17,7 @@ const corsOptions: cors.CorsOptions = {
 app.use(cors.default(/*corsOptions*/));
 
 const neo4jSbx: Neo4jQuery = new Neo4jQuery('neo4j-sbx')
+const neo4jSeed: Neo4jQuery = new Neo4jQuery('neo4j-seed')
 
 
 app.get(`/bbb`, async (req: Request, resp: Response) => {
@@ -43,9 +44,20 @@ app.get(`/bbb`, async (req: Request, resp: Response) => {
 
 })
 
-const enverStack = `/enver-stack`;
-app.get(enverStack, async (req: Request, resp: Response) => {
-    const buildIds = req.originalUrl.substring(enverStack.length + 1).split(',')
+app.get(`/enver-stack/:central`, async (req: Request, resp: Response) => {
+
+    const {central} = req.params as { central: 'sbx' | 'seed' }
+    if (!central) {
+        throw new Error('missing central')
+    }
+    //?buildIdArr=a,b,c,d
+    let buildIdArrStr = req.query.buildIdArr as string;
+    if (!buildIdArrStr || buildIdArrStr.length < 2) {
+        throw new Error('missing buildId arr')
+    }
+    const neo4j = central == 'sbx' ? neo4jSbx : neo4jSeed
+
+    const buildIds = buildIdArrStr.split(',');
     const cypher = `
             MATCH (jobs)-[building]->(stacks)-[producing]->(productions)
             WHERE 'RepoEnverPpBase' IN jobs.classesNames 
@@ -55,7 +67,7 @@ app.get(enverStack, async (req: Request, resp: Response) => {
             OPTIONAL MATCH (stacks)-[consuming]->(producers)
             RETURN jobs, building, stacks, producing, productions, consuming;
 `
-    resp.send(await neo4jSbx.exeCypher(cypher))
+    resp.send(await neo4j.exeCypher(cypher))
 
 })
 
