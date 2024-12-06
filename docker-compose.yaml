@@ -7,8 +7,9 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - neo4j-sbx
-      - neo4j-seed
+      - neo4j-sbx-usw1
+      - neo4j-seed-use1
+      - neo4j-seed-usw1
 
   #  neo4j:
   #    image: neo4j:latest
@@ -22,23 +23,34 @@ services:
 
 
 
-  neo4j-sbx:
+  neo4j-sbx-usw1:
     image: neo4j:5.22
     ports:
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - ./zip-central-neo4j-sbx/extracted:/data
+      - ./zip-central-neo4j-sbx-usw1/extracted:/data
     environment:
       - NEO4J_AUTH=none
 
 
-  neo4j-seed:
+  neo4j-seed-use1:
     image: neo4j:5.22
     ports:
       - "7475:7474"
       - "7688:7687"
     volumes:
-      - ./zip-central-neo4j-seed/extracted:/data
+      - ./zip-central-neo4j-seed-use1/extracted:/data
+    environment:
+      - NEO4J_AUTH=none
+
+
+  neo4j-seed-usw1:
+    image: neo4j:5.22
+    ports:
+      - "7476:7474"
+      - "7689:7687"
+    volumes:
+      - ./zip-central-neo4j-seed-usw1/extracted:/data
     environment:
       - NEO4J_AUTH=none

@@ -3,7 +3,6 @@ import http from 'http';
 import https from 'https';
 import fs from 'fs';
 import {Neo4jQuery} from "./neo4j-query";
-import {promises as dns} from 'dns';
 import * as cors from 'cors';
 
 
@@ -16,8 +15,9 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(cors.default(/*corsOptions*/));
 
-const neo4jSbx: Neo4jQuery = new Neo4jQuery('neo4j-sbx')
-const neo4jSeed: Neo4jQuery = new Neo4jQuery('neo4j-seed')
+const neo4jSbxW1: Neo4jQuery = new Neo4jQuery('neo4j-sbx-usw1')
+const neo4jSeedE1: Neo4jQuery = new Neo4jQuery('neo4j-seed-use1')
+const neo4jSeedW1: Neo4jQuery = new Neo4jQuery('neo4j-seed-usw1')
 
 
 app.get(`/bbb`, async (req: Request, resp: Response) => {
@@ -40,13 +40,13 @@ app.get(`/bbb`, async (req: Request, resp: Response) => {
     
     `;
 //    console.log(`bbbb --->>> cypher ---->>>>${cypher}`)
-    resp.send(await neo4jSbx.exeCypher(cypher))
+    resp.send(await neo4jSbxW1.exeCypher(cypher))
 
 })
 
-app.get(`/enver-stack/:central`, async (req: Request, resp: Response) => {
+app.get(`/enver-stack/:central/:region?`, async (req: Request, resp: Response) => {
 
-    const {central} = req.params as { central: 'sbx' | 'seed' }
+    const {central, region} = req.params as { central: 'sbx' | 'seed', region?: 'e1' | 'w1' }
     if (!central) {
         throw new Error('missing central')
     }
@@ -55,7 +55,7 @@ app.get(`/enver-stack/:central`, async (req: Request, resp: Response) => {
     if (!buildIdArrStr || buildIdArrStr.length < 2) {
         throw new Error('missing buildId arr')
     }
-    const neo4j = central == 'sbx' ? neo4jSbx : neo4jSeed
+    const neo4j = central == 'sbx' ? neo4jSbxW1 : (region == 'w1' ? neo4jSeedE1 : neo4jSeedW1)
 
     const buildIds = buildIdArrStr.split(',');
     const cypher = `
