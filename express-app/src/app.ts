@@ -46,7 +46,7 @@ app.get(`/bbb`, async (req: Request, resp: Response) => {
 
 app.get(`/enver-stack/:central/:region?`, async (req: Request, resp: Response) => {
 
-    const {central, region} = req.params as { central: 'sbx' | 'seed', region?: 'e1' | 'w1' }
+    const {central, region} = req.params as { central: 'sbx' | 'seed', region?: 'us-east-1' | 'us-west-1' }
     if (!central) {
         throw new Error('missing central')
     }
@@ -55,7 +55,9 @@ app.get(`/enver-stack/:central/:region?`, async (req: Request, resp: Response) =
     if (!buildIdArrStr || buildIdArrStr.length < 2) {
         throw new Error('missing buildId arr')
     }
-    const neo4j = central == 'sbx' ? neo4jSbxW1 : (region == 'w1' ? neo4jSeedE1 : neo4jSeedW1)
+    console.log(`region:${region}, central:${central}`)
+
+    const neo4j = central == 'sbx' ? neo4jSbxW1 : (region == 'us-east-1' ? neo4jSeedE1 : neo4jSeedW1)
 
     const buildIds = buildIdArrStr.split(',');
     const cypher = `
